@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Google Calendar Project</title>
+		<link rel="stylesheet" href="./reset.css" />
+		<link rel="stylesheet" href="./styles.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<!-- Header -->
+		<header>
+			<h1>Calendar</h1>
+			<div class="icons">
+				<button class="date-reg-icon prev">&lt;</button>
+				<button class="date-reg-icon next">&gt;</button>
+			</div>
+			<h2 class="current-date">July 2023</h2>
+		</header>
+		<main>
+			<!-- Side bar -->
+			<div class="side-bar">
+				<!-- Month calendar -->
+				<div class="month-view"></div>
+				<!-- Header of side bar calendar-->
+				<div class="side-calendar-header">
+					<h2 class="current-date">July 2023</h2>
+					<div class="icons">
+						<button class="date-reg-icon prev">&lt;</button>
+						<button class="date-reg-icon next">&gt;</button>
+					</div>
+				</div>
+				<div class="side-bar-calendar">
+					<ul class="month-cal-weeks">
+						<li>S</li>
+						<li>M</li>
+						<li>T</li>
+						<li>W</li>
+						<li>T</li>
+						<li>F</li>
+						<li>S</li>
+					</ul>
+					<ul class="month-cal-days">
+						<li class="inactive">25</li>
+						<li class="inactive">26</li>
+						<li class="inactive">27</li>
+						<li class="inactive">28</li>
+						<li class="inactive">29</li>
+						<li class="inactive">30</li>
+						<li>1</li>
+						<li>2</li>
+						<li>3</li>
+						<li>4</li>
+						<li>5</li>
+						<li>6</li>
+						<li>7</li>
+						<li>8</li>
+						<li>9</li>
+						<li>10</li>
+						<li>11</li>
+						<li>12</li>
+						<li class="active">13</li>
+						<li>14</li>
+						<li>15</li>
+						<li>16</li>
+						<li>17</li>
+						<li>18</li>
+						<li>19</li>
+						<li>20</li>
+						<li>21</li>
+						<li>22</li>
+						<li>23</li>
+						<li>24</li>
+						<li>25</li>
+						<li>26</li>
+						<li>27</li>
+						<li>28</li>
+						<li>29</li>
+						<li>30</li>
+						<li>31</li>
+						<li class="inactive">1</li>
+						<li class="inactive">2</li>
+						<li class="inactive">3</li>
+						<li class="inactive">4</li>
+						<li class="inactive">5</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Week view calendar-->
+			<div class="main-part">
+				<div class="week-view">
+					<!-- Header of WEEK VIEW -->
+					<ul class="weekday">
+						<li></li>
+						<li>Sun</li>
+						<li>Mon</li>
+						<li>Tue</li>
+						<li>Wed</li>
+						<li>Thu</li>
+						<li>Fri</li>
+						<li>Sat</li>
+					</ul>
+					<ul class="day-of-the-month">
+						<li></li>
+						<li>9</li>
+						<li>10</li>
+						<li>11</li>
+						<li>12</li>
+						<li>13</li>
+						<li>14</li>
+						<li>15</li>
+					</ul>
+
+					<!-- Main part of WEEK VIEW -->
+					<div class="by-the-hour">
+						<!-- 1 AM -->
+						<div class="hour">1 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 2 AM -->
+						<div class="hour">2 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 3 AM -->
+						<div class="hour">3 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 4 AM -->
+						<div class="hour">4 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 5 AM -->
+						<div class="hour">5 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 6 AM -->
+						<div class="hour">6 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 7 AM -->
+						<div class="hour">7 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 8 AM -->
+						<div class="hour">8 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 9 AM -->
+						<div class="hour">9 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 10 AM -->
+						<div class="hour">10 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 11 AM -->
+						<div class="hour">11 AM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 12 PM -->
+						<div class="hour">12 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 1 PM -->
+						<div class="hour">1 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 2 PM -->
+						<div class="hour">2 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 3 PM -->
+						<div class="hour">3 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 4 PM -->
+						<div class="hour">4 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 5 PM -->
+						<div class="hour">5 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 6 PM -->
+						<div class="hour">6 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 7 PM -->
+						<div class="hour">7 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 8 PM -->
+						<div class="hour">8 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 9 PM -->
+						<div class="hour">9 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 10 PM -->
+						<div class="hour">1 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 11 PM -->
+						<div class="hour">11 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<!-- 12 PM -->
+						<div class="hour">12 PM</div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+					</div>
+				</div>
+				<div class="event-creation">
+					<div>
+						<input type="text" class="event-title" placeholder="Add title" />
+                        <input type="date" class="event-date" value="2023-07-13">
+                        <input type="time" class="event--start-time" value="10:00" step="1800">
+                        <span>-</span>
+                        <input type="time" class="event-end-time" value="11:00" step="1800">
+
+                    </div>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>
