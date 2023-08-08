@@ -41,6 +41,12 @@ main {
 
 /* --- Header styles --- */
 
+.google-cal-logo {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+}
+
 header {
     padding: 20px 40px;
     display: flex;
@@ -66,6 +72,10 @@ header {
 .date-reg-icon:hover {
     background-color: #faf7f7;
     border-radius: 50%;;
+}
+
+header {
+    border-bottom: 1px solid #d1cfcf;
 }
 
 /* --- Side bar styles --- */
@@ -166,19 +176,77 @@ header {
     padding-top: 30px;
 }
 
+.cal-hours {
+    display: inline-flex;
+    flex-direction: column;
+    margin-left: 7%;
+}
+
+.cal-hours .hour {
+    text-align: left;
+    height: 40px;
+    padding: 0;
+
+}
+
 .week-view ul{
     display: flex;
     text-align: center;
   }
 
+.week-view {
+    display: inline-block;
+    width: 87.5%;
+}
+
 .week-view li {
-    width: calc(100% / 8);
+    width: calc(100% / 7);
     padding: 5px;
 }
 
 .weekday li {
     text-transform: uppercase;
     font-size: 14px;
+}
+
+.weekday li.active {
+    color: #1A73E8;
+}
+
+
+
+.day-of-the-month .active {
+    color: #fff;
+}
+
+.day-of-the-month li {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.day-of-the-month li::before {
+    content: "";
+    position: absolute;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+}
+
+.day-of-the-month li:hover::before {
+    background-color: #f0eded;
+}
+
+.day-of-the-month li.active::before {
+    background-color: #1A73E8;
+}
+
+.day-of-the-month li.active:hover::before {
+    background-color: #185cb6;
 }
 
 .day-of-the-month li {
@@ -188,7 +256,7 @@ header {
 
 .by-the-hour {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(24, 40px);
 }
 
