@@ -349,8 +349,55 @@ header {
 .event-create-header {
     background-color: #f0efef;
     height: 10%;
-    text-align: end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
+
+.delete-btn {
+    display: none;
+    position: relative;
+    margin-right: 15px;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.delete-icon {
+    margin-top: 3px;
+}
+
+.delete-btn:hover {
+    background-color: #e8e4e4;
+}
+
+.delete-btn:active {
+    background-color: #c2c1c1;
+    transition: background-color 0.1s linear;
+}
+
+.delete-btn::after {
+    position: absolute;
+    left: 0;
+    bottom: -95%;
+    content: "Delete event";
+    background-color: #464545;
+    color: #eaeaea;
+    font-weight: 400;
+    font-size: 11px;
+    width: 80px;
+    border-radius: 4px;
+    padding: 5px;
+    display: none;
+    letter-spacing: 0.8px;
+}
+
+.delete-btn:hover::after {
+    display: block;
+}
+
 
 .exit-event-modal {
     position: relative;
@@ -382,7 +429,7 @@ header {
     background-color: #464545;
     color: #eaeaea;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 11px;
     border-radius: 4px;
     padding: 5px;
     display: none;

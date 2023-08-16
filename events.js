@@ -1,26 +1,43 @@
 "use strict";
 
 let clicked = false;
-let lastMadeEventId;
+let selectedEventId;
 
 export function showCreateEventModal(div) {
 	let save = false;
+	let wasEmptySlot;
 	const eventModal = document.querySelector(".event-creation");
+
 	clicked = !clicked;
-	if (clicked) {
-		eventModal.style.display = "block";
-		lastMadeEventId = takeSpace(div);
-		addTitleToCreatedEvent();
+
+
+    
+	if (div.className === "created-event") {
+		wasEmptySlot = false;
+		changeVisibility(eventModal);
+		activateDeleteBtn(eventModal);
+		selectedEventId = div.id;
+		document.querySelector(".event-title").value = div.innerText;
 	} else {
-		eventModal.style.display = "none";
-		if (!save) {
-			releaseSpace();
+		wasEmptySlot = true;
+		if (clicked) {
+			changeVisibility(eventModal);
+			selectedEventId = takeSpace(div);
+			addTitleToCreatedEvent();
+		} else {
+			changeVisibility(eventModal);
+			if (!save) {
+				releaseSpace();
+			}
 		}
 	}
 
 	const exitBtn = document.querySelector(".exit-event-modal");
 	exitBtn.onclick = () => {
-		releaseSpace();
+		if (wasEmptySlot) {
+			releaseSpace();
+		}
+		emptyTitleInput();
 		hideCreateEventModal(eventModal);
 	};
 
@@ -30,8 +47,17 @@ export function showCreateEventModal(div) {
 		const inputedEventTitle = document.querySelector(".event-title");
 		addTitleToCreatedEvent(inputedEventTitle.value);
 		hideCreateEventModal(eventModal);
-		lastMadeEventId = "";
-		inputedEventTitle.value = "";
+		selectedEventId = "";
+		emptyTitleInput();
+	};
+}
+
+function activateDeleteBtn(eventModal) {
+	const deleteBtn = document.querySelector(".delete-btn");
+	changeVisibility(deleteBtn);
+	deleteBtn.onclick = () => {
+		releaseSpace();
+		hideCreateEventModal(eventModal);
 	};
 }
 
@@ -44,7 +70,7 @@ function takeSpace(div) {
 }
 
 function addTitleToCreatedEvent(title) {
-	const currEvent = document.getElementById(lastMadeEventId);
+	const currEvent = document.getElementById(selectedEventId);
 	if (!title) {
 		currEvent.innerText = `(no title)`;
 	} else {
@@ -53,12 +79,20 @@ function addTitleToCreatedEvent(title) {
 }
 
 function releaseSpace() {
-	document.getElementById(lastMadeEventId).remove();
-	const eventTitle = document.querySelector(".event-title");
-	eventTitle.value = "";
+	document.getElementById(selectedEventId).remove();
+	emptyTitleInput();
+}
+
+function emptyTitleInput() {
+	const inputedEventTitle = document.querySelector(".event-title");
+	inputedEventTitle.value = "";
 }
 
 function hideCreateEventModal(eventModal) {
-	eventModal.style.display = "none";
+	changeVisibility(eventModal);
 	clicked = !clicked;
+}
+
+function changeVisibility(element) {
+	element.style.display = element.style.display === "block" ? "none" : "block";
 }
