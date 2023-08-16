@@ -5,21 +5,14 @@ let selectedEventId;
 
 export function showCreateEventModal(div) {
 	let save = false;
-	let wasEmptySlot;
 	const eventModal = document.querySelector(".event-creation");
 
 	clicked = !clicked;
 
+	let wasEmptySlot = div.className === "created-event" ? false : true;
 
-    
-	if (div.className === "created-event") {
-		wasEmptySlot = false;
-		changeVisibility(eventModal);
-		activateDeleteBtn(eventModal);
-		selectedEventId = div.id;
-		document.querySelector(".event-title").value = div.innerText;
-	} else {
-		wasEmptySlot = true;
+	if (wasEmptySlot) {
+		hideDeleteBtn();
 		if (clicked) {
 			changeVisibility(eventModal);
 			selectedEventId = takeSpace(div);
@@ -30,6 +23,11 @@ export function showCreateEventModal(div) {
 				releaseSpace();
 			}
 		}
+	} else {
+		changeVisibility(eventModal);
+		activateDeleteBtn(eventModal);
+		selectedEventId = div.id;
+		document.querySelector(".event-title").value = div.innerText;
 	}
 
 	const exitBtn = document.querySelector(".exit-event-modal");
@@ -50,6 +48,11 @@ export function showCreateEventModal(div) {
 		selectedEventId = "";
 		emptyTitleInput();
 	};
+}
+
+function hideDeleteBtn() {
+	const deleteBtn = document.querySelector(".delete-btn");
+	deleteBtn.style.display = "none";
 }
 
 function activateDeleteBtn(eventModal) {

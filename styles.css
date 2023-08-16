@@ -355,7 +355,7 @@ header {
 }
 
 .delete-btn {
-    display: none;
+    display: block;
     position: relative;
     margin-right: 15px;
     border-radius: 50%;
