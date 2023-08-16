@@ -2,7 +2,7 @@
 
 import { createHours, createWeekdays, createNumWeekdays, createGrid } from "./constructors.js";
 import { renderSmallCalendar } from "./smallCal.js";
-import { openCreateEventModal } from "./events.js";
+import { showCreateEventModal } from "./events.js";
 
 const currFullDate = new Date();
 getFullWeek(currFullDate);
@@ -162,7 +162,7 @@ function displayDate(currFullDate, weekInfo) {
 
 const timeGrid = document.querySelector(".by-the-hour");
 timeGrid.addEventListener("click", (e) => {
-	openCreateEventModal(e.target);
+	showCreateEventModal(e.target);
 });
 
 // const timeGrid = document.querySelectorAll(".cell");

@@ -405,6 +405,7 @@ header {
     height: 50px;
     border-bottom: 1px solid #c7c7c7;
     margin-bottom: 20px;
+    color: #4f4f4f;
 }
 
 .event-title:focus {
