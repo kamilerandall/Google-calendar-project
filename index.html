@@ -17,15 +17,18 @@
 	<body>
 		<!-- Header -->
 		<header>
-			<img src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_7_2x.png" alt="" class="google-cal-logo">
+			<img
+				src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_7_2x.png"
+				alt=""
+				class="google-cal-logo"
+			/>
 			<h1>Calendar</h1>
 			<div class="icons">
+				<button class="today">Today</button>
 				<button class="date-reg-icon prev">&lt;</button>
 				<button class="date-reg-icon next">&gt;</button>
 			</div>
-			<h2 class="current-date">
-				<span class="month-main">July</span> <span class="year-main">2023</span>
-			</h2>
+			<h2 class="current-date">July 2023</h2>
 		</header>
 		<main>
 			<!-- Side bar -->
@@ -35,7 +38,8 @@
 					<!-- Header of side bar calendar-->
 					<div class="side-calendar-header">
 						<h2 class="current-date">
-							<span class="month-side">July</span> <span class="year-side">2023</span>
+							<span class="month-side">July</span>
+							<span class="year-side">2023</span>
 						</h2>
 						<div class="icons small-cal-icons">
 							<button class="date-reg-icon prev">&lt;</button>
@@ -58,24 +62,23 @@
 
 			<!-- Week view calendar-->
 			<div class="main-part">
-				<div class="week-view"></div>
+				<div class="week-view">
+					<div class="week-view-header"></div>
+				</div> 
+
 				<div class="event-creation">
-					<div>
+					<div class="event-create-header">
+						<button class="exit-event-modal">✕</button>
+					</div>
+					<div class="event-info">
 						<input type="text" class="event-title" placeholder="Add title" />
 						<input type="date" class="event-date" value="2023-07-13" />
-						<input
-							type="time"
-							class="event--start-time"
-							value="10:00"
-							step="1800"
-						/>
+						<input type="time" class="event--start-time" value="10:00" step="1800" />
 						<span>-</span>
-						<input
-							type="time"
-							class="event-end-time"
-							value="11:00"
-							step="1800"
-						/>
+						<input type="time" class="event-end-time" value="11:00" step="1800" />
+					</div>
+					<div class="event-create-footer">
+						<button class="save-event-btn">Save</button>
 					</div>
 				</div>
 			</div>

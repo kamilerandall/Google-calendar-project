@@ -1,131 +1,173 @@
-import {
-	createHours,
-	createWeekdays,
-	createNumWeekdays,
-	createGrid,
-} from "./constructors.js";
+"use strict";
 
-const mainSelectedYear = document.querySelector(".year-main");
-const mainSelectedMonth = document.querySelector(".month-main");
+import { createHours, createWeekdays, createNumWeekdays, createGrid } from "./constructors.js";
+import { renderSmallCalendar } from "./smallCal.js";
+import { openCreateEventModal } from "./events.js";
 
-const months = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
-];
+const currFullDate = new Date();
+getFullWeek(currFullDate);
 
-const today = new Date();
-let currYear = today.getFullYear();
-let currMonth = today.getMonth();
-const currDayOfMonth = today.getDate();
-const currDayOfWeek = today.getDay();
-
-mainSelectedMonth.innerText = months[currMonth];
-mainSelectedYear.innerText = currYear;
-
-function getCurrWeek() {
-	let currWeek = [];
-	const firstDayOfThisWeek = currDayOfMonth - currDayOfWeek;
-	const lastDayOfThisWeek = firstDayOfThisWeek + 6;
-	for (let i = firstDayOfThisWeek; i <= lastDayOfThisWeek; i++) {
-		currWeek.push(i);
-	}
-	return currWeek;
-}
-
-function renderSmallCalendar(currYear, currMonth) {
-	const sideSelectedYear = document.querySelector(".year-side");
-	const sideSelectedMonth = document.querySelector(".month-side");
-	sideSelectedMonth.innerText = months[currMonth];
-	sideSelectedYear.innerText = currYear;
-
-	const lastDateOfPrevMonth = new Date(currYear, currMonth, 0).getDate();
-	const lastDayOfPrevMonth = new Date(
-		currYear,
-		currMonth - 1,
-		lastDateOfPrevMonth
-	).getDay();
-
-	const lastDateOfTheMonth = new Date(currYear, currMonth + 1, 0).getDate();
-	const lastDayOfTheMonth = new Date(
-		currYear,
-		currMonth,
-		lastDateOfTheMonth
-	).getDay();
-	const smallCal = document.querySelector(".side-bar-calendar");
-	smallCal.innerHTML = "";
-	const weekDayRow = document.createElement("ul");
-	weekDayRow.className = "month-cal-weeks";
-	smallCal.appendChild(weekDayRow);
-	const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
-	for (let day of daysOfWeek) {
-		let weekDayName = document.createElement("li");
-		weekDayName.innerHTML = day;
-		weekDayRow.appendChild(weekDayName);
-	}
-
-	const daysWrapper = document.createElement("ul");
-	daysWrapper.className = "month-cal-days";
-	smallCal.appendChild(daysWrapper);
-
-	function createDay(dayNum, dayClass) {
-		const dayInSmallCal = document.createElement("li");
-		if (dayClass) dayInSmallCal.className = dayClass;
-		dayInSmallCal.innerText = dayNum;
-		daysWrapper.appendChild(dayInSmallCal);
-	}
-
-	// visible inactive days of last month
-	for (
-		let i = lastDateOfPrevMonth - lastDayOfPrevMonth;
-		i <= lastDateOfPrevMonth;
-		i++
-	) {
-		createDay(i, "inactive");
-	}
-	// days of this month
-	for (let i = 1; i <= lastDateOfTheMonth; i++) {
-		if (
-			i === currDayOfMonth //&&
-			// currMonth === new Date.getMonth() &&
-			// currYear === new Date.getFullYear()
-		) {
-			createDay(i, "active");
-		} else {
-			createDay(i);
-		}
-	}
-	// visible inactive days of next month
-	for (let i = 1; i < 7 - lastDayOfTheMonth; i++) {
-		createDay(i, "inactive");
-	}
-}
-
-renderSmallCalendar(currYear, currMonth);
+renderSmallCalendar();
 createHours();
 createWeekdays();
-createNumWeekdays(getCurrWeek());
-createGrid(7, 27);
 
-const smallCalIcons = document.querySelector(".small-cal-icons");
-smallCalIcons.addEventListener("click", (e) => {
+const mainIcons = document.querySelector(".icons");
+mainIcons.addEventListener("click", (e) => {
+	const newCurrDate = currFullDate.getDate();
 	if (e.target.className.includes("prev")) {
-		today.setMonth(currMonth - 1);
-		currMonth = today.getMonth();
-		currYear = today.getFullYear();
+		currFullDate.setDate(newCurrDate - 7);
 	} else if (e.target.className.includes("next")) {
-		today.setMonth(currMonth + 1);
-		currMonth = today.getMonth();
-		currYear = today.getFullYear();
+		currFullDate.setDate(newCurrDate + 7);
+	} else {
+		currFullDate.setTime(Date.now());
 	}
-	renderSmallCalendar(currYear, currMonth);
+	getFullWeek(currFullDate);
 });
+
+function getFullWeek(currFullDate) {
+	const currDateOfTheMonth = currFullDate.getDate();
+	const currDayOfTheWeek = currFullDate.getDay();
+
+	const firstDateOfCurrWeekFull = new Date(
+		currFullDate.getFullYear(),
+		currFullDate.getMonth(),
+		currDateOfTheMonth - currDayOfTheWeek
+	);
+	const lastDateOfCurrWeekFull = new Date(
+		currFullDate.getFullYear(),
+		currFullDate.getMonth(),
+		currFullDate.getDate() + (6 - currDayOfTheWeek)
+	);
+
+	const currWeekInfo = getWeekInfo(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate);
+
+	displayDate(currFullDate, currWeekInfo);
+	createNumWeekdays(currWeekInfo.currWeek, currFullDate);
+	createGrid(currWeekInfo.currWeek, 24);
+}
+
+function getWeekInfo(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate) {
+	return firstDateOfCurrWeekFull.getDate() < lastDateOfCurrWeekFull.getDate()
+		? getWeekInfoInOneMonth(firstDateOfCurrWeekFull.getDate(), lastDateOfCurrWeekFull.getDate())
+		: firstDateOfCurrWeekFull.getDate() > currFullDate.getDate()
+		? getWeekInfoBetweenPrevAndCurrMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate)
+		: getWeekInfoBetweenCurrAndNextMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull);
+}
+
+function getWeekInfoInOneMonth(firstDateOfCurrWeek, lastDateOfCurrWeek) {
+	const weekInfo = {
+		currWeek: [],
+	};
+	for (let i = firstDateOfCurrWeek; i <= lastDateOfCurrWeek; i++) {
+		weekInfo.currWeek.push(i);
+	}
+	return weekInfo;
+}
+
+function getWeekInfoBetweenPrevAndCurrMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull) {
+	const weekInfo = {
+		currWeek: [],
+	};
+
+	const lastDateOfPrevMonth = new Date(
+		firstDateOfCurrWeekFull.getFullYear(),
+		firstDateOfCurrWeekFull.getMonth() + 1,
+		0
+	).getDate();
+
+	for (let i = firstDateOfCurrWeekFull.getDate(); i <= lastDateOfPrevMonth; i++) {
+		weekInfo.currWeek.push(i);
+	}
+	for (let i = 1; i <= lastDateOfCurrWeekFull.getDate(); i++) {
+		weekInfo.currWeek.push(i);
+	}
+
+	return addMonthAndYearOfCurrWeek(weekInfo, firstDateOfCurrWeekFull, lastDateOfCurrWeekFull);
+}
+
+function getWeekInfoBetweenCurrAndNextMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull) {
+	const weekInfo = {
+		currWeek: [],
+	};
+
+	const lastDateOfCurrMonth = new Date(
+		firstDateOfCurrWeekFull.getFullYear(),
+		firstDateOfCurrWeekFull.getMonth() + 1,
+		0
+	).getDate();
+
+	for (let i = firstDateOfCurrWeekFull.getDate(); i <= lastDateOfCurrMonth; i++) {
+		weekInfo.currWeek.push(i);
+	}
+	for (let i = 1; i <= lastDateOfCurrWeekFull.getDate(); i++) {
+		weekInfo.currWeek.push(i);
+	}
+
+	return addMonthAndYearOfCurrWeek(weekInfo, firstDateOfCurrWeekFull, lastDateOfCurrWeekFull);
+}
+
+function addMonthAndYearOfCurrWeek(weekInfo, firstDateOfCurrWeekFull, lastDateOfCurrWeekFull) {
+	weekInfo.firstMonth = firstDateOfCurrWeekFull.getMonth();
+	weekInfo.firstMonthsYear = firstDateOfCurrWeekFull.getFullYear();
+	weekInfo.lastMonth = lastDateOfCurrWeekFull.getMonth();
+	weekInfo.lastMonthsYear = lastDateOfCurrWeekFull.getFullYear();
+	return weekInfo;
+}
+
+function displayDate(currFullDate, weekInfo) {
+	const months = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
+
+	const date = document.querySelector(".current-date");
+
+	const isTwoYearsAndMonths =
+		weekInfo?.firstMonthsYear && weekInfo.firstMonthsYear !== weekInfo.lastMonthsYear;
+	const isTwoMonthsOneYear = weekInfo?.firstMonth;
+	const twoMonthsAndYears = `${months[weekInfo.firstMonth]} ${weekInfo.firstMonthsYear} - ${
+		months[weekInfo.lastMonth]
+	} ${weekInfo.lastMonthsYear}`;
+	const twoMonthsOneYear = `${months[weekInfo.firstMonth]} - ${
+		months[weekInfo.lastMonth]
+	} ${currFullDate.getFullYear()}`;
+	const oneMonthOneYear = `${months[currFullDate.getMonth()]} ${currFullDate.getFullYear()}`;
+
+	date.innerHTML = isTwoYearsAndMonths
+		? twoMonthsAndYears
+		: isTwoMonthsOneYear
+		? twoMonthsOneYear
+		: oneMonthOneYear;
+
+	if (weekInfo?.firstMonthsYear && weekInfo.firstMonthsYear !== weekInfo.lastMonthsYear) {
+		date.innerHTML = `${months[weekInfo.firstMonth]} ${weekInfo.firstMonthsYear} - ${
+			months[weekInfo.lastMonth]
+		} ${weekInfo.lastMonthsYear}`;
+	} else {
+		date.innerHTML = weekInfo?.firstMonth
+			? `${months[weekInfo.firstMonth]} - ${months[weekInfo.lastMonth]} ${currFullDate.getFullYear()}`
+			: `${months[currFullDate.getMonth()]} ${currFullDate.getFullYear()}`;
+	}
+}
+
+const timeGrid = document.querySelector(".by-the-hour");
+timeGrid.addEventListener("click", (e) => {
+	openCreateEventModal(e.target);
+});
+
+// const timeGrid = document.querySelectorAll(".cell");
+// timeGrid.forEach((cell) => {
+// 	cell.addEventListener("click", (e) => {
+// 		createEvent(e.target);
+// 	});
+// });

@@ -1,6 +1,8 @@
+"use strict";
+
 const mainPart = document.querySelector(".main-part");
 const weekViewContainer = document.querySelector(".week-view");
-
+const weekViewHeader = document.querySelector(".week-view-header");
 const eventModal = document.querySelector(".event-creation");
 eventModal.style.display = "none";
 
@@ -21,10 +23,11 @@ export function createHours() {
 		calHours.appendChild(hour);
 	}
 }
+
+const weekDayRow = document.createElement("ul");
+weekDayRow.className = "weekday";
+weekViewHeader.appendChild(weekDayRow);
 export function createWeekdays() {
-	const weekDayRow = document.createElement("ul");
-	weekDayRow.className = "weekday";
-	weekViewContainer.appendChild(weekDayRow);
 	const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 	for (let day of daysOfWeek) {
 		let weekDayName = document.createElement("li");
@@ -36,13 +39,19 @@ export function createWeekdays() {
 	}
 }
 
-export function createNumWeekdays(currWeek) {
-	const dayOfMonthRow = document.createElement("ul");
-	dayOfMonthRow.className = "day-of-the-month";
-	weekViewContainer.appendChild(dayOfMonthRow);
+const dayOfMonthRow = document.createElement("ul");
+dayOfMonthRow.className = "day-of-the-month";
+weekViewHeader.appendChild(dayOfMonthRow);
+
+export function createNumWeekdays(currWeek, currFullDate) {
+	dayOfMonthRow.innerHTML = "";
 	for (let day of currWeek) {
 		let dayNum = document.createElement("li");
-		if (day === new Date().getDate()) {
+		if (
+			day === new Date().getDate() &&
+			currFullDate.getMonth() === new Date().getMonth() &&
+			currFullDate.getFullYear() === new Date().getFullYear()
+		) {
 			dayNum.className = "active";
 		}
 		dayNum.innerHTML = day;
@@ -50,15 +59,16 @@ export function createNumWeekdays(currWeek) {
 	}
 }
 
-export function createGrid(colCount, rowCount) {
+export function createGrid(currWeek, rowCount) {
 	let row = document.createElement("div");
 	row.className = "by-the-hour";
 	for (let i = 0; i < rowCount; i++) {
-		for (let j = 0; j < colCount; j++) {
+		currWeek.forEach((day) => {
 			let col = document.createElement("div");
+			col.id = `${day} ${i}`;
 			col.className = "cell";
 			row.appendChild(col);
-		}
+		});
 		weekViewContainer.appendChild(row);
 	}
 }
