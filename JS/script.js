@@ -2,7 +2,6 @@
 
 import { createHours, createWeekdays, createNumWeekdays, createGrid } from "./constructors.js";
 import { renderSmallCalendar } from "./smallCal.js";
-import { showCreateEventModal } from "./events.js";
 import { openMakeEventModal } from "./events2.js";
 
 const currFullDate = new Date();

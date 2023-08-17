@@ -5,7 +5,7 @@ let lastClickedEmpty;
 let selectedEventId;
 
 export function openMakeEventModal(clickedEl) {
-    
+	console.log(clickedEl);
 	const eventModal = document.querySelector(".event-creation");
 	changeEventModalVisibility();
 
