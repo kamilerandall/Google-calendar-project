@@ -1,39 +1,27 @@
 "use strict";
 
-let clicked = false;
 let selectedEventId;
 
 export function showCreateEventModal(div) {
-	let save = false;
+	let save;
 	const eventModal = document.querySelector(".event-creation");
+	changeVisibility(eventModal);
 
-	clicked = !clicked;
-
-	let wasEmptySlot = div.className === "created-event" ? false : true;
+	const wasEmptySlot = div.className !== "created-event";
 
 	if (wasEmptySlot) {
 		hideDeleteBtn();
-		if (clicked) {
-			changeVisibility(eventModal);
-			selectedEventId = takeSpace(div);
-			addTitleToCreatedEvent();
-		} else {
-			changeVisibility(eventModal);
-			if (!save) {
-				releaseSpace();
-			}
-		}
+		selectedEventId = takeSpace(div);
+		addTitleToCreatedEvent(selectedEventId);
 	} else {
-		changeVisibility(eventModal);
-		activateDeleteBtn(eventModal);
+		activateDeleteBtn(eventModal, selectedEventId);
 		selectedEventId = div.id;
 		document.querySelector(".event-title").value = div.innerText;
 	}
-
 	const exitBtn = document.querySelector(".exit-event-modal");
 	exitBtn.onclick = () => {
 		if (wasEmptySlot) {
-			releaseSpace();
+			releaseSpace(selectedEventId);
 		}
 		emptyTitleInput();
 		hideCreateEventModal(eventModal);
@@ -43,11 +31,16 @@ export function showCreateEventModal(div) {
 	saveBtn.onclick = () => {
 		save = true;
 		const inputedEventTitle = document.querySelector(".event-title");
-		addTitleToCreatedEvent(inputedEventTitle.value);
+		addTitleToCreatedEvent(selectedEventId, inputedEventTitle.value);
 		hideCreateEventModal(eventModal);
 		selectedEventId = "";
 		emptyTitleInput();
 	};
+	// console.log("prev cl", previouslyClickedEmpty);
+	// console.log("save", !save);
+	// if (previouslyClickedEmpty && !save) {
+	// 	releaseSpace(selectedEventId);
+	// }
 }
 
 function hideDeleteBtn() {
@@ -55,11 +48,12 @@ function hideDeleteBtn() {
 	deleteBtn.style.display = "none";
 }
 
-function activateDeleteBtn(eventModal) {
+function activateDeleteBtn(eventModal, selectedEventId) {
+	console.log(selectedEventId);
 	const deleteBtn = document.querySelector(".delete-btn");
-	changeVisibility(deleteBtn);
+	deleteBtn.style.display = "block";
 	deleteBtn.onclick = () => {
-		releaseSpace();
+		releaseSpace(selectedEventId);
 		hideCreateEventModal(eventModal);
 	};
 }
@@ -72,16 +66,13 @@ function takeSpace(div) {
 	return createdEvent.id;
 }
 
-function addTitleToCreatedEvent(title) {
+function addTitleToCreatedEvent(selectedEventId, title = "(no title)") {
 	const currEvent = document.getElementById(selectedEventId);
-	if (!title) {
-		currEvent.innerText = `(no title)`;
-	} else {
-		currEvent.innerText = `${title}`;
-	}
+	currEvent.innerText = `${title}`;
 }
 
-function releaseSpace() {
+function releaseSpace(selectedEventId) {
+	console.log(selectedEventId);
 	document.getElementById(selectedEventId).remove();
 	emptyTitleInput();
 }
@@ -93,7 +84,6 @@ function emptyTitleInput() {
 
 function hideCreateEventModal(eventModal) {
 	changeVisibility(eventModal);
-	clicked = !clicked;
 }
 
 function changeVisibility(element) {

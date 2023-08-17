@@ -3,6 +3,7 @@
 import { createHours, createWeekdays, createNumWeekdays, createGrid } from "./constructors.js";
 import { renderSmallCalendar } from "./smallCal.js";
 import { showCreateEventModal } from "./events.js";
+import { openMakeEventModal } from "./events2.js";
 
 const currFullDate = new Date();
 getFullWeek(currFullDate);
@@ -162,12 +163,17 @@ function displayDate(currFullDate, weekInfo) {
 
 const timeGrid = document.querySelector(".by-the-hour");
 timeGrid.addEventListener("click", (e) => {
-	showCreateEventModal(e.target);
+	openMakeEventModal(e.target);
 });
 
-// const timeGrid = document.querySelectorAll(".cell");
-// timeGrid.forEach((cell) => {
-// 	cell.addEventListener("click", (e) => {
-// 		createEvent(e.target);
-// 	});
+// const timeGrid = document.querySelector(".by-the-hour");
+// timeGrid.addEventListener("click", (e) => {
+// 	openMakeEventModal();
+// 	if(e.target.className === "cell") {
+// 		takeTimeSlot();
+// 	}
+// 	else if (e.target.className === "created-event") {
+// 		console.log('this is already an event')
+// 	}
+// 	// showCreateEventModal(e.target);
 // });
