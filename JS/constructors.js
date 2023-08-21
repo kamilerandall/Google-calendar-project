@@ -1,5 +1,8 @@
 "use strict";
 
+import { currFullDate } from "./state.js";
+
+
 const mainPart = document.querySelector(".main-part");
 const weekViewContainer = document.querySelector(".week-view");
 const weekViewHeader = document.querySelector(".week-view-header");
@@ -43,7 +46,7 @@ const dayOfMonthRow = document.createElement("ul");
 dayOfMonthRow.className = "day-of-the-month";
 weekViewHeader.appendChild(dayOfMonthRow);
 
-export function createNumWeekdays(currWeek, currFullDate) {
+export function createNumWeekdays(currWeek) {
 	dayOfMonthRow.innerHTML = "";
 	for (let day of currWeek) {
 		let dayNum = document.createElement("li");
@@ -59,11 +62,15 @@ export function createNumWeekdays(currWeek, currFullDate) {
 	}
 }
 
-export function createGrid(currWeek, rowCount) {
+export function createGrid(currWeekInfo, rowCount) {
+	const grid = document.querySelector(".by-the-hour");
+	if (grid) {
+		grid.remove();
+	}
 	let row = document.createElement("div");
 	row.className = "by-the-hour";
 	for (let i = 0; i < rowCount; i++) {
-		currWeek.forEach((day) => {
+		currWeekInfo.currWeek.forEach((day) => {
 			let col = document.createElement("div");
 			col.id = `${day} ${i}`;
 			col.className = "cell";
@@ -71,4 +78,14 @@ export function createGrid(currWeek, rowCount) {
 		});
 		weekViewContainer.appendChild(row);
 	}
+}
+
+export function createStaticWeekCalPart() {
+	createHours();
+	createWeekdays();
+}
+
+export function createDynamicWeekCalPart(currWeekInfo) {
+	createNumWeekdays(currWeekInfo.currWeek);
+	createGrid(currWeekInfo, 24);
 }

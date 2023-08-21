@@ -1,38 +1,47 @@
 "use strict";
 
-let save;
-let lastClickedEmpty;
-let selectedEventId;
+import { activeEvent, eventModalVisible, setActiveEvent } from "./state.js";
 
 export function openMakeEventModal(clickedEl) {
-	console.log(clickedEl);
-	const eventModal = document.querySelector(".event-creation");
-	changeEventModalVisibility();
-
-	const wasEmptySlot = clickedEl.className === "cell";
-	if (wasEmptySlot && eventModal.style.display === "block") {
-		lastClickedEmpty = true;
-		selectedEventId = createNewEvent(clickedEl);
-	} else if (!wasEmptySlot && eventModal.style.display === "block") {
-		lastClickedEmpty = false;
-		selectedEventId = modifyEvent(clickedEl);
-	} else {
-		if (!save && lastClickedEmpty) {
-			releaseSpace(selectedEventId);
+	if (!eventModalVisible) {
+		const wasEmptySlot = clickedEl.className === "cell";
+		if (wasEmptySlot) {
+			setActiveEvent(createNewEvent(clickedEl));
+		} else if (!wasEmptySlot) {
+			setActiveEvent(modifyEvent(clickedEl));
 		}
+	} else {
+		if (activeEvent.isNew) {
+			releaseSpace(activeEvent.id);
+		}
+		setActiveEvent(null);
 		emptyTitleInput();
 	}
 }
 
-function saveEvent(selectedEventId) {
+function exitModal() {
+	const exitBtn = document.querySelector(".exit-event-modal");
+	exitBtn.onclick = () => {
+		if (activeEvent.isNew) {
+			releaseSpace(activeEvent.id);
+		}
+		emptyTitleInput();
+		setActiveEvent(null);
+	};
+}
+
+function saveEvent() {
 	const saveBtn = document.querySelector(".save-event-btn");
-	save = false;
 	saveBtn.onclick = () => {
-		save = true;
+		//activeEvent.isNew = false;
+
+		setActiveEvent({ ...activeEvent, isNew: false });
+
 		const inputedEventTitle = document.querySelector(".event-title");
 		const title = inputedEventTitle.value ? inputedEventTitle.value : "(no title)";
-		addTitleToCreatedEvent(selectedEventId, title);
-		changeEventModalVisibility();
+		addTitleToCreatedEvent(activeEvent.id, title);
+
+		setActiveEvent(null);
 		emptyTitleInput();
 	};
 }
@@ -41,8 +50,9 @@ function createNewEvent(clickedSpot) {
 	hideDeleteBtn();
 	const eventId = takeEmptySlot(clickedSpot);
 	addTitleToCreatedEvent(eventId);
-	saveEvent(eventId);
-	return eventId;
+	saveEvent();
+	exitModal();
+	return { id: eventId, isNew: true };
 }
 
 function hideDeleteBtn() {
@@ -66,8 +76,9 @@ function addTitleToCreatedEvent(eventId, title = "(no title)") {
 function modifyEvent(clickedEvent) {
 	activateDeleteBtn(clickedEvent.id);
 	showSelectedEventNameInModal(clickedEvent);
-	saveEvent(clickedEvent.id);
-	return clickedEvent.id;
+	saveEvent();
+	exitModal();
+	return { id: clickedEvent.id, isNew: false };
 }
 
 function activateDeleteBtn(selectedEventId) {
@@ -75,7 +86,7 @@ function activateDeleteBtn(selectedEventId) {
 	deleteBtn.style.display = "block";
 	deleteBtn.onclick = () => {
 		releaseSpace(selectedEventId);
-		changeEventModalVisibility();
+		setActiveEvent(null);
 	};
 }
 
@@ -92,9 +103,4 @@ function releaseSpace(selectedEventId) {
 function emptyTitleInput() {
 	const inputedEventTitle = document.querySelector(".event-title");
 	inputedEventTitle.value = "";
-}
-
-function changeEventModalVisibility() {
-	const eventModal = document.querySelector(".event-creation");
-	eventModal.style.display = eventModal.style.display === "block" ? "none" : "block";
 }

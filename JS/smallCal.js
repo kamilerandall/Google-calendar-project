@@ -1,4 +1,6 @@
-const startDate = new Date();
+import { currFullDate } from "./state.js";
+
+const startDate = currFullDate;
 let currYear = startDate.getFullYear();
 let currMonth = startDate.getMonth();
 const currDateOfMonth = startDate.getDate();
@@ -58,11 +60,7 @@ export function renderSmallCalendar() {
 	}
 	// days of this month
 	for (let i = 1; i <= lastDateOfTheMonth; i++) {
-		if (
-			i === currDateOfMonth &&
-			currMonth === new Date().getMonth() &&
-			currYear === new Date().getFullYear()
-		) {
+		if (i === currDateOfMonth && currMonth === new Date().getMonth() && currYear === new Date().getFullYear()) {
 			createDay(i, "active");
 		} else {
 			createDay(i);
