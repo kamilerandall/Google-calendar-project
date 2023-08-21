@@ -16,7 +16,7 @@ export function getFullWeek() {
 	);
 
 	const currWeekInfo = getWeekInfo(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate);
-
+	console.log(currWeekInfo);
 	return currWeekInfo;
 }
 

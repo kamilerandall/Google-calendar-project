@@ -2,7 +2,6 @@
 
 import { currFullDate } from "./state.js";
 
-
 const mainPart = document.querySelector(".main-part");
 const weekViewContainer = document.querySelector(".week-view");
 const weekViewHeader = document.querySelector(".week-view-header");
