@@ -27,6 +27,3 @@ export function getNewFullDate(direction) {
 	const currDate = currFullDate.getDate();
 	currFullDate.setDate(currDate + direction);
 }
-
-
-

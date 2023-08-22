@@ -8,10 +8,9 @@ import { currFullDate, getNewFullDate } from "./state.js";
 
 renderSmallCalendar();
 
-let currWeekInfo = getFullWeek();
-displayDate(currWeekInfo);
 createStaticWeekCalPart();
-createDynamicWeekCalPart(currWeekInfo);
+
+createWeekCal();
 
 document.querySelector(".icons").addEventListener("click", (e) => {
 	if (e.target.className.includes("prev")) {
@@ -21,8 +20,11 @@ document.querySelector(".icons").addEventListener("click", (e) => {
 	} else {
 		currFullDate.setTime(Date.now());
 	}
-	currWeekInfo = getFullWeek();
+	createWeekCal();
+});
 
+export function createWeekCal() {
+	const currWeekInfo = getFullWeek();
 	displayDate(currWeekInfo);
 	createDynamicWeekCalPart(currWeekInfo);
 
@@ -30,10 +32,4 @@ document.querySelector(".icons").addEventListener("click", (e) => {
 	timeGrid.addEventListener("click", (e) => {
 		openMakeEventModal(e.target);
 	});
-});
-
-const timeGrid = document.querySelector(".by-the-hour");
-timeGrid.addEventListener("click", (e) => {
-	openMakeEventModal(e.target);
-});
-
+}

@@ -1,17 +1,18 @@
 "use strict";
 
 import { activeEvent, eventModalVisible, setActiveEvent } from "./state.js";
+import { createWeekCal } from "./script.js";
+import { currFullDate } from "./state.js";
 
 export function openMakeEventModal(clickedEl) {
 	setDate(clickedEl);
 	setTime(clickedEl);
 	if (!eventModalVisible) {
 		const wasEmptySlot = clickedEl.className === "cell";
-		console.log(wasEmptySlot);
 		if (wasEmptySlot) {
-			setActiveEvent(createNewEvent(clickedEl));
+			createNewEvent(clickedEl);
 		} else if (!wasEmptySlot) {
-			setActiveEvent(modifyEvent(clickedEl));
+			modifyEvent(clickedEl);
 		}
 	} else {
 		if (activeEvent.isNew) {
@@ -33,13 +34,12 @@ function exitModal() {
 	};
 }
 
-function saveEvent(clickedSpot) {
+function saveEvent() {
 	const saveBtn = document.querySelector(".save-event-btn");
 	saveBtn.onclick = () => {
 		//activeEvent.isNew = false;
 
 		setActiveEvent({ ...activeEvent, isNew: false });
-
 		const inputedEventTitle = document.querySelector(".event-title");
 		const title = inputedEventTitle.value ? inputedEventTitle.value : "(no title)";
 		addTitleToCreatedEvent(activeEvent.id, title);
@@ -52,10 +52,19 @@ function saveEvent(clickedSpot) {
 function createNewEvent(clickedSpot) {
 	hideDeleteBtn();
 	const eventId = takeEmptySlot(clickedSpot);
-	addTitleToCreatedEvent(eventId);
+	// changeDate(clickedSpot);
+	// changeStartTime(clickedSpot);
+	changeEventPlace(clickedSpot);
+	let title = document.querySelector(".event-title").value;
+	if (title) {
+		addTitleToCreatedEvent(eventId, title);
+	} else {
+		addTitleToCreatedEvent(eventId);
+	}
+
 	saveEvent(clickedSpot);
 	exitModal();
-	return { id: eventId, isNew: true };
+	setActiveEvent({ id: eventId, isNew: true });
 }
 
 function hideDeleteBtn() {
@@ -85,7 +94,7 @@ function modifyEvent(clickedEvent) {
 	showSelectedEventNameInModal(clickedEvent);
 	saveEvent(clickedEvent);
 	exitModal();
-	return { id: clickedEvent.id, isNew: false };
+	setActiveEvent({ id: clickedEvent.id, isNew: false });
 }
 
 function activateDeleteBtn(selectedEventId) {
@@ -103,9 +112,9 @@ function showSelectedEventNameInModal(clickedEvent) {
 	document.querySelector(".event-title").value = title;
 }
 
-function releaseSpace(selectedEventId) {
+function releaseSpace(selectedEventId, noTitleEmptying) {
 	document.getElementById(selectedEventId).remove();
-	emptyTitleInput();
+	if (!noTitleEmptying) emptyTitleInput();
 }
 
 function emptyTitleInput() {
@@ -129,21 +138,74 @@ function getClickedSpotTime(id) {
 	return id.split(" ")[1];
 }
 
-// function getEndTime() {
+// function changeDate(clickedSpot) {
+// 	const eventDate = document.querySelector(".event-date");
+// 	let time = clickedSpot.id.split(" ")[1];
+// 	eventDate.onchange = () => {
+// 		const idOfEventToRemove = `${clickedSpot.id} event`;
+// 		releaseSpace(idOfEventToRemove, true);
+// 		changeWeek(eventDate.value);
+// 		let newSpotId = `${eventDate.value} ${time}`;
+// 		createNewEvent(document.getElementById(newSpotId));
+// 	};
+// }
+
+// function changeStartTime(clickedSpot) {
+// 	const eventStartTime = document.querySelector(".event-start-time");
+// 	let date = clickedSpot.id.split(" ")[0];
+// 	eventStartTime.onchange = () => {
+// 		const idOfEventToRemove = `${clickedSpot.id} event`;
+// 		releaseSpace(idOfEventToRemove, true);
+// 		let newSpotId = `${date} ${eventStartTime.value}`;
+// 		createNewEvent(document.getElementById(newSpotId));
+// 	};
+// }
+
+function changeEventPlace(clickedSpot) {
+	const eventDate = document.querySelector(".event-date");
+	const eventStartTime = document.querySelector(".event-start-time");
+	let [date, time] = clickedSpot.id.split(" ");
+	const idOfEventToRemove = `${clickedSpot.id} event`;
+	eventDate.onchange = () => {
+		releaseSpace(idOfEventToRemove, true);
+		changeWeek(eventDate.value);
+		let newSpotId = `${eventDate.value} ${time}`;
+		createNewEvent(document.getElementById(newSpotId));
+	};
+	eventStartTime.onchange = () => {
+		releaseSpace(idOfEventToRemove, true);
+		let newSpotId = `${date} ${eventStartTime.value}`;
+		createNewEvent(document.getElementById(newSpotId));
+	};
+}
+
+function changeWeek(selectedDate) {
+	currFullDate.setTime(new Date(selectedDate));
+	createWeekCal();
+}
+// function getEndTime(startTime) {
 // 	const eventEndTime = document.querySelector(".event-end-time");
-// 	// 	eventEndTime.onchange = () => {
-// 	// 		// console.log(eventEndTime.value);
-// 	// 	};
+// 	let endTime;
+
+// 	eventEndTime.onchange = () => {
+// 		console.log(eventEndTime.value);
+// 		let [startHour, startMin] = startTime.split(":");
+// 		let [endHour, endMin] = eventEndTime.value.split(":");
+// 		console.log(+endHour - +startHour);
+// 		console.log(+endMin - +startMin);
+// 	};
 // }
 
 function getThirtyMinMore(eventStart) {
-	let endTime;
-	const [hour, min] = eventStart.split(":");
-	endTime = `${hour}:30`;
-
-	return endTime;
+	let [hour, min] = eventStart.split(":");
+	const isLessThan60 = +min + 30 < 60;
+	const addToMinutes = `${hour}:${+min + 30}`;
+	const addToHoursAndMinutes = `${getFormatedHour(+hour + 1)}:${+min - 30}`;
+	return isLessThan60 ? addToMinutes : addToHoursAndMinutes;
 }
 
-
+function getFormatedHour(hour) {
+	return hour < 10 ? `0${hour}:00` : `${hour}:00`;
+}
 
 function getEventHeight() {}
