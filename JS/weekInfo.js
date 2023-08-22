@@ -16,26 +16,27 @@ export function getFullWeek() {
 	);
 
 	const currWeekInfo = getWeekInfo(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate);
-	console.log(currWeekInfo);
+	currWeekInfo["firstDateOfCurrWeekFull"] = firstDateOfCurrWeekFull;
+	currWeekInfo["lastDateOfCurrWeekFull"] = lastDateOfCurrWeekFull;
 	return currWeekInfo;
 }
 
 function getWeekInfo(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate) {
 	return firstDateOfCurrWeekFull.getDate() < lastDateOfCurrWeekFull.getDate()
-		? getWeekInfoInOneMonth(firstDateOfCurrWeekFull.getDate(), lastDateOfCurrWeekFull.getDate())
+		? getWeekInfoInOneMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull)
 		: firstDateOfCurrWeekFull.getDate() > currFullDate.getDate()
 		? getWeekInfoBetweenPrevAndCurrMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull, currFullDate)
 		: getWeekInfoBetweenCurrAndNextMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull);
 }
 
-function getWeekInfoInOneMonth(firstDateOfCurrWeek, lastDateOfCurrWeek) {
+function getWeekInfoInOneMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull) {
 	const weekInfo = {
 		currWeek: [],
 	};
-	for (let i = firstDateOfCurrWeek; i <= lastDateOfCurrWeek; i++) {
+	for (let i = firstDateOfCurrWeekFull.getDate(); i <= lastDateOfCurrWeekFull.getDate(); i++) {
 		weekInfo.currWeek.push(i);
 	}
-	return weekInfo;
+	return addMonthAndYearOfCurrWeek(weekInfo, firstDateOfCurrWeekFull, lastDateOfCurrWeekFull);
 }
 
 function getWeekInfoBetweenPrevAndCurrMonth(firstDateOfCurrWeekFull, lastDateOfCurrWeekFull) {
@@ -88,7 +89,18 @@ function addMonthAndYearOfCurrWeek(weekInfo, firstDateOfCurrWeekFull, lastDateOf
 	return weekInfo;
 }
 
+function formatDate() {
+	let formatedDate = new Date();
+	return formatedDate.toISOString().split("T")[0];
+}
+
+export function displayDate(currWeekInfo) {
+	const date = document.querySelector(".current-date");
+	date.innerHTML = getDateToDisplay(currWeekInfo);
+}
+
 function getDateToDisplay(weekInfo) {
+	console.log(weekInfo);
 	const months = [
 		"January",
 		"February",
@@ -104,10 +116,10 @@ function getDateToDisplay(weekInfo) {
 		"December",
 	];
 
-	// const date = document.querySelector(".current-date");
-
-	const isTwoYearsAndMonths = weekInfo?.firstMonthsYear && weekInfo.firstMonthsYear !== weekInfo.lastMonthsYear;
-	const isTwoMonthsOneYear = weekInfo?.firstMonth;
+	const isTwoYearsAndMonths =
+		weekInfo.firstMonth !== weekInfo.lastMonth && weekInfo.firstMonthsYear !== weekInfo.lastMonthsYear;
+	const isTwoMonthsOneYear =
+		weekInfo.firstMonth !== weekInfo.lastMonth && weekInfo.firstMonthsYear === weekInfo.lastMonthsYear;
 	const twoMonthsAndYears = `${months[weekInfo.firstMonth]} ${weekInfo.firstMonthsYear} - ${
 		months[weekInfo.lastMonth]
 	} ${weekInfo.lastMonthsYear}`;
@@ -117,9 +129,4 @@ function getDateToDisplay(weekInfo) {
 	const oneMonthOneYear = `${months[currFullDate.getMonth()]} ${currFullDate.getFullYear()}`;
 
 	return isTwoYearsAndMonths ? twoMonthsAndYears : isTwoMonthsOneYear ? twoMonthsOneYear : oneMonthOneYear;
-}
-
-export function displayDate(currWeekInfo) {
-	const date = document.querySelector(".current-date");
-	date.innerHTML = getDateToDisplay(currWeekInfo);
 }

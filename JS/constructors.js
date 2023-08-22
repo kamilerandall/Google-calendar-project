@@ -68,15 +68,36 @@ export function createGrid(currWeekInfo, rowCount) {
 	}
 	let row = document.createElement("div");
 	row.className = "by-the-hour";
-	for (let i = 0; i < rowCount; i++) {
+	for (let hour = 0; hour < rowCount; hour++) {
 		currWeekInfo.currWeek.forEach((day) => {
 			let col = document.createElement("div");
-			col.id = `${day} ${i}`;
+			col.id = getFormatedDateForId(currWeekInfo, day, hour);
 			col.className = "cell";
 			row.appendChild(col);
 		});
 		weekViewContainer.appendChild(row);
 	}
+}
+
+function getFormatedDateForId(currWeekInfo, day, hour) {
+	const { firstMonthsYear, firstMonth, lastMonthsYear, lastMonth } = currWeekInfo;
+	return firstMonth === lastMonth
+		? `${firstMonthsYear}-${getFormatedMonth(firstMonth)}-${getFormatedDay(day)} ${getFormatedHour(hour)}`
+		: day < 10
+		? `${lastMonthsYear}-${getFormatedMonth(lastMonth)}-${getFormatedDay(day)} ${getFormatedHour(hour)}`
+		: `${firstMonthsYear}-${getFormatedMonth(firstMonth)}-${getFormatedDay(day)} ${getFormatedHour(hour)}`;
+}
+
+function getFormatedMonth(month) {
+	return month < 9 ? `0${month + 1}` : `${month + 1}`;
+}
+
+function getFormatedDay(day) {
+	return day < 10 ? `0${day}` : `${day}`;
+}
+
+function getFormatedHour(hour) {
+	return hour < 10 ? `0${hour}:00` : `${hour}:00`;
 }
 
 export function createStaticWeekCalPart() {

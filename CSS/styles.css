@@ -465,6 +465,8 @@ header {
     border: none;
     font-size: 16px;
     color: #484848;
+    width: 112px;
+    margin-right: 20px;
 }
 
 input[type=time] {
@@ -472,26 +474,13 @@ input[type=time] {
     border: none;
     color: #2a2c2d;
     font-size: 16px;
-    width: 55px;
+    width: 70px;
   }
 
   input[type="time"]::-webkit-calendar-picker-indicator {
-    display: none;
+    margin-left: 0;
 }
 
-.created-event {
-    display: flex;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    background-color: #35adf3;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: grab;
-    width: 90%;
-    box-shadow: 1px 1px 5px #484848;
-}
 
 .event-create-footer {
     position: absolute;
@@ -520,4 +509,18 @@ input[type=time] {
 .save-event-btn:active {
     background-color: #185cb6;
     transition: background-color 0.1s linear;
+}
+
+.created-event {
+    display: flex;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    background-color: #35adf3;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: grab;
+    width: 90%;
+    box-shadow: 1px 1px 5px #484848;
 }
