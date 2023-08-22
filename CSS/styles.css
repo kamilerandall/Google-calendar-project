@@ -517,10 +517,12 @@ input[type=time] {
     font-size: 12px;
     background-color: #35adf3;
     color: #fff;
+    font-weight: 450;
     padding: 4px 8px;
     border-radius: 4px;
     overflow: hidden;
     cursor: grab;
     width: 90%;
+    height: 50%;
     box-shadow: 1px 1px 5px #484848;
 }

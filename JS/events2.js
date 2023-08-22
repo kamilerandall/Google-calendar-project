@@ -7,6 +7,7 @@ export function openMakeEventModal(clickedEl) {
 	setTime(clickedEl);
 	if (!eventModalVisible) {
 		const wasEmptySlot = clickedEl.className === "cell";
+		console.log(wasEmptySlot);
 		if (wasEmptySlot) {
 			setActiveEvent(createNewEvent(clickedEl));
 		} else if (!wasEmptySlot) {
@@ -41,7 +42,7 @@ function saveEvent(clickedSpot) {
 
 		const inputedEventTitle = document.querySelector(".event-title");
 		const title = inputedEventTitle.value ? inputedEventTitle.value : "(no title)";
-		addTitleToCreatedEvent(clickedSpot, activeEvent.id, title);
+		addTitleToCreatedEvent(activeEvent.id, title);
 
 		setActiveEvent(null);
 		emptyTitleInput();
@@ -51,7 +52,7 @@ function saveEvent(clickedSpot) {
 function createNewEvent(clickedSpot) {
 	hideDeleteBtn();
 	const eventId = takeEmptySlot(clickedSpot);
-	addTitleToCreatedEvent(clickedSpot, eventId);
+	addTitleToCreatedEvent(eventId);
 	saveEvent(clickedSpot);
 	exitModal();
 	return { id: eventId, isNew: true };
@@ -63,22 +64,26 @@ function hideDeleteBtn() {
 }
 
 function takeEmptySlot(clickedSpot) {
+	let [date, time] = clickedSpot.id.split(" ");
+	if (clickedSpot.firstChild) {
+		time = getThirtyMinMore(time);
+	}
 	const newEvent = document.createElement("div");
 	newEvent.className = "created-event";
-	newEvent.id = clickedSpot.id + " event";
+	newEvent.id = `${date} ${time} event`;
 	clickedSpot.appendChild(newEvent);
 	return newEvent.id;
 }
 
-function addTitleToCreatedEvent(clickedSpot, eventId, title = "(no title)") {
+function addTitleToCreatedEvent(eventId, title = "(no title)") {
 	const currEvent = document.getElementById(eventId);
-	currEvent.innerText = `${title} ${getClickedSpotTime(clickedSpot)}`;
+	currEvent.innerText = `${title} | ${getClickedSpotTime(eventId)}`;
 }
 
 function modifyEvent(clickedEvent) {
 	activateDeleteBtn(clickedEvent.id);
 	showSelectedEventNameInModal(clickedEvent);
-	saveEvent();
+	saveEvent(clickedEvent);
 	exitModal();
 	return { id: clickedEvent.id, isNew: false };
 }
@@ -93,7 +98,8 @@ function activateDeleteBtn(selectedEventId) {
 }
 
 function showSelectedEventNameInModal(clickedEvent) {
-	const title = clickedEvent.innerText === "(no title)" ? "" : clickedEvent.innerText;
+	const onlyTitle = clickedEvent.innerText.split("|")[0];
+	const title = onlyTitle.trim() === "(no title)" ? "" : onlyTitle;
 	document.querySelector(".event-title").value = title;
 }
 
@@ -113,26 +119,31 @@ function setDate(clickedSpot) {
 }
 
 function setTime(clickedSpot) {
-	console.log(clickedSpot);
 	const eventStartTime = document.querySelector(".event-start-time");
 	const eventEndTime = document.querySelector(".event-end-time");
-	eventStartTime.value = getClickedSpotTime(clickedSpot);
-	let end = +clickedSpot.id.split(" ")[1].split(":")[0] + 1;
-	eventEndTime.value = getFormatedHour(end);
-	getEndTime();
+	eventStartTime.value = getClickedSpotTime(clickedSpot.id);
+	eventEndTime.value = getThirtyMinMore(eventStartTime.value);
 }
 
-function getClickedSpotTime(clickedSpot) {
-	return clickedSpot.id.split(" ")[1];
+function getClickedSpotTime(id) {
+	return id.split(" ")[1];
 }
 
-function getEndTime(input) {
-	const eventEndTime = document.querySelector(".event-end-time");
-	eventEndTime.onchange = () => {
-		console.log("changed");
-	};
+// function getEndTime() {
+// 	const eventEndTime = document.querySelector(".event-end-time");
+// 	// 	eventEndTime.onchange = () => {
+// 	// 		// console.log(eventEndTime.value);
+// 	// 	};
+// }
+
+function getThirtyMinMore(eventStart) {
+	let endTime;
+	const [hour, min] = eventStart.split(":");
+	endTime = `${hour}:30`;
+
+	return endTime;
 }
 
-function getFormatedHour(hour) {
-	return hour < 10 ? `0${hour}:00` : `${hour}:00`;
-}
+
+
+function getEventHeight() {}

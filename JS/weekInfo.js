@@ -100,7 +100,6 @@ export function displayDate(currWeekInfo) {
 }
 
 function getDateToDisplay(weekInfo) {
-	console.log(weekInfo);
 	const months = [
 		"January",
 		"February",
