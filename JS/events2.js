@@ -1,18 +1,19 @@
 "use strict";
 
-import { activeEvent, eventModalVisible, setActiveEvent } from "./state.js";
+import { activeEvent, eventModalVisible, setActiveEvent, clickedSpot, setClickedSpot } from "./state.js";
 import { createWeekCal } from "./script.js";
 import { currFullDate } from "./state.js";
 
-export function openMakeEventModal(clickedEl) {
-	setDate(clickedEl);
-	setTime(clickedEl);
+export function openMakeEventModal(clickedSpot) {
+	setClickedSpot(clickedSpot);
+	setDate();
+	setTime();
 	if (!eventModalVisible) {
-		const wasEmptySlot = clickedEl.className === "cell";
+		const wasEmptySlot = clickedSpot.className === "cell";
 		if (wasEmptySlot) {
-			createNewEvent(clickedEl);
+			createNewEvent();
 		} else if (!wasEmptySlot) {
-			modifyEvent(clickedEl);
+			modifyEvent();
 		}
 	} else {
 		if (activeEvent.isNew) {
@@ -49,12 +50,12 @@ function saveEvent() {
 	};
 }
 
-function createNewEvent(clickedSpot) {
+function createNewEvent() {
 	hideDeleteBtn();
-	const eventId = takeEmptySlot(clickedSpot);
+	const eventId = takeEmptySlot();
 	// changeDate(clickedSpot);
 	// changeStartTime(clickedSpot);
-	changeEventPlace(clickedSpot);
+	changeEventPlace();
 	let title = document.querySelector(".event-title").value;
 	if (title) {
 		addTitleToCreatedEvent(eventId, title);
@@ -62,7 +63,7 @@ function createNewEvent(clickedSpot) {
 		addTitleToCreatedEvent(eventId);
 	}
 
-	saveEvent(clickedSpot);
+	saveEvent();
 	exitModal();
 	setActiveEvent({ id: eventId, isNew: true });
 }
@@ -72,7 +73,7 @@ function hideDeleteBtn() {
 	deleteBtn.style.display = "none";
 }
 
-function takeEmptySlot(clickedSpot) {
+function takeEmptySlot() {
 	let [date, time] = clickedSpot.id.split(" ");
 	if (clickedSpot.firstChild) {
 		time = getThirtyMinMore(time);
@@ -89,12 +90,12 @@ function addTitleToCreatedEvent(eventId, title = "(no title)") {
 	currEvent.innerText = `${title} | ${getClickedSpotTime(eventId)}`;
 }
 
-function modifyEvent(clickedEvent) {
-	activateDeleteBtn(clickedEvent.id);
-	showSelectedEventNameInModal(clickedEvent);
-	saveEvent(clickedEvent);
+function modifyEvent() {
+	activateDeleteBtn(clickedSpot.id);
+	showSelectedEventNameInModal();
+	saveEvent(clickedSpot);
 	exitModal();
-	setActiveEvent({ id: clickedEvent.id, isNew: false });
+	setActiveEvent({ id: clickedSpot.id, isNew: false });
 }
 
 function activateDeleteBtn(selectedEventId) {
@@ -106,8 +107,8 @@ function activateDeleteBtn(selectedEventId) {
 	};
 }
 
-function showSelectedEventNameInModal(clickedEvent) {
-	const onlyTitle = clickedEvent.innerText.split("|")[0];
+function showSelectedEventNameInModal() {
+	const onlyTitle = clickedSpot.innerText.split("|")[0];
 	const title = onlyTitle.trim() === "(no title)" ? "" : onlyTitle;
 	document.querySelector(".event-title").value = title;
 }
@@ -122,60 +123,40 @@ function emptyTitleInput() {
 	inputedEventTitle.value = "";
 }
 
-function setDate(clickedSpot) {
+function setDate() {
 	const eventDate = document.querySelector(".event-date");
 	eventDate.value = clickedSpot.id.split(" ")[0];
 }
 
-function setTime(clickedSpot) {
+function setTime() {
 	const eventStartTime = document.querySelector(".event-start-time");
 	const eventEndTime = document.querySelector(".event-end-time");
-	eventStartTime.value = getClickedSpotTime(clickedSpot.id);
+	eventStartTime.value = getClickedSpotTime();
 	eventEndTime.value = getThirtyMinMore(eventStartTime.value);
 }
 
-function getClickedSpotTime(id) {
-	return id.split(" ")[1];
+function getClickedSpotTime() {
+	return clickedSpot.id.split(" ")[1];
 }
 
-// function changeDate(clickedSpot) {
-// 	const eventDate = document.querySelector(".event-date");
-// 	let time = clickedSpot.id.split(" ")[1];
-// 	eventDate.onchange = () => {
-// 		const idOfEventToRemove = `${clickedSpot.id} event`;
-// 		releaseSpace(idOfEventToRemove, true);
-// 		changeWeek(eventDate.value);
-// 		let newSpotId = `${eventDate.value} ${time}`;
-// 		createNewEvent(document.getElementById(newSpotId));
-// 	};
-// }
-
-// function changeStartTime(clickedSpot) {
-// 	const eventStartTime = document.querySelector(".event-start-time");
-// 	let date = clickedSpot.id.split(" ")[0];
-// 	eventStartTime.onchange = () => {
-// 		const idOfEventToRemove = `${clickedSpot.id} event`;
-// 		releaseSpace(idOfEventToRemove, true);
-// 		let newSpotId = `${date} ${eventStartTime.value}`;
-// 		createNewEvent(document.getElementById(newSpotId));
-// 	};
-// }
-
-function changeEventPlace(clickedSpot) {
+function changeEventPlace() {
 	const eventDate = document.querySelector(".event-date");
 	const eventStartTime = document.querySelector(".event-start-time");
 	let [date, time] = clickedSpot.id.split(" ");
+	let newSpotId;
 	const idOfEventToRemove = `${clickedSpot.id} event`;
 	eventDate.onchange = () => {
 		releaseSpace(idOfEventToRemove, true);
 		changeWeek(eventDate.value);
-		let newSpotId = `${eventDate.value} ${time}`;
-		createNewEvent(document.getElementById(newSpotId));
+		newSpotId = `${eventDate.value} ${time}`;
+		setClickedSpot(document.getElementById(newSpotId));
+		createNewEvent();
 	};
 	eventStartTime.onchange = () => {
 		releaseSpace(idOfEventToRemove, true);
-		let newSpotId = `${date} ${eventStartTime.value}`;
-		createNewEvent(document.getElementById(newSpotId));
+		newSpotId = `${date} ${eventStartTime.value}`;
+		setClickedSpot(document.getElementById(newSpotId));
+		createNewEvent();
 	};
 }
 

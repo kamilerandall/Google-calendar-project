@@ -27,3 +27,9 @@ export function getNewFullDate(direction) {
 	const currDate = currFullDate.getDate();
 	currFullDate.setDate(currDate + direction);
 }
+
+export let clickedSpot = null;
+
+export function setClickedSpot(spot) {
+	clickedSpot = spot;
+}
